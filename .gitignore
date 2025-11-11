@@ -1,0 +1,30 @@
+# Sensitive files
+*.key
+*.pem
+*.env
+.env.*
+
+# Personal configs
+*-personal.md
+*-private.md
+
+# Backup files
+*.backup
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Test artifacts
+/tmp/
+/test-output/

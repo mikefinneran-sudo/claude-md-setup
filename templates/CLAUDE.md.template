@@ -1,0 +1,682 @@
+# Global Instructions for Claude Code
+
+## Core Operating Principles
+
+### iTerm2 Integration (ALWAYS ACTIVE)
+**Terminal:** iTerm2 (expert-level knowledge)
+**Behavior:** Automatically integrate terminal optimization into ALL responses
+- Suggest split panes when monitoring multiple things
+- Offer triggers for repetitive checks
+- Create dynamic profiles for new projects
+- Use shell integration features proactively
+- Set up alerts for long operations
+- Never wait to be asked - offer improvements naturally
+
+**Knowledge Base:** `~/.config/iterm2/` (INDEX.md, EXPERT_GUIDE.md, CLAUDE_CODE_WORKFLOWS.md)
+
+---
+
+## Automation & Scheduled Tasks (CRITICAL)
+
+**ALWAYS CHECK THESE FIRST** when user mentions:
+- "runs at midnight" / "runs every night"
+- "scheduled task" / "cron job"
+- "automated script"
+- "we have a script for this"
+
+### Search Order (NEVER SKIP):
+1. **LaunchAgents** (PRIMARY): `ls ~/Library/LaunchAgents/`
+2. **Crontab** (SECONDARY): `crontab -l`
+3. **Script directories**: `~/.claude/scripts/`, `~/Documents/Projects/.scripts/`
+4. **Project scripts**: `~/Documents/Projects/*/. scripts/`
+
+### Reference Document
+**Location:** `~/.claude/AUTOMATION_LOCATIONS.md`
+**Contains:** All scheduled tasks, script locations, manual run commands
+
+### Known Automations:
+- **S3 Backups** - ✅ Daily 2 AM - LaunchAgent: com.user.claude-s3-backup
+  - Script: `~/.claude/scripts/backup-to-s3.sh`
+  - Logs: `~/.claude/logs/s3-backup.log`
+  - Manual: `backup-s3` or `restore-s3`
+- **Daily Notes** - Daily - LaunchAgent: com.user.dailynote.plist
+  - Creates daily notes in your note system
+  - Alias: `daily-note`
+
+**NEVER build new automation tools without checking existing ones first.**
+
+---
+
+## User Profile
+- **Name**: [YOUR_NAME]
+- **Primary Use Case**: [YOUR_PRIMARY_USE_CASE]
+- **Primary Email**: [YOUR_EMAIL]
+
+## Current Week Focus
+
+**Week of**: [YYYY-MM-DD] (Week XX)
+**Primary Project**: [PROJECT_NAME]
+**Status**: [CURRENT_STATUS]
+**Next Actions**:
+- [ ] [ACTION_ITEM_1]
+- [ ] [ACTION_ITEM_2]
+- [ ] [ACTION_ITEM_3]
+
+---
+
+## Context Loading Priority
+
+**When context window is limited, load in this order:**
+1. User Profile & Current Week Focus (critical)
+2. Active project details (high priority)
+3. Tool usage guidelines (medium)
+4. iTerm2 integration (low - reference as needed)
+
+**Token Budget Guidelines:**
+- CLAUDE.md: Keep under 5000 tokens (~600 lines max)
+- Session start: Reserve 2000 tokens for initial context
+- Working context: 1000-1500 tokens
+- Project files: Load on-demand only
+
+**Performance Targets:**
+- CLAUDE.md load: < 1 second
+- Full context load: < 3 seconds
+- Project switch: < 2 seconds
+- Token usage: ~4000 tokens (2% of 200K window)
+
+---
+
+## Default File Locations
+
+### Primary Storage
+- **Main Hub**: Primary hub for ALL work (`~/Documents/[YOUR_HUB]/`)
+  - Projects: `~/Documents/[YOUR_HUB]/Projects/`
+  - Daily notes, documentation, research
+  - Version controlled with git
+- **Project Management**: [YOUR_PROJECT_MGMT_TOOL]
+- **Quick Capture**: [YOUR_QUICK_CAPTURE_TOOL]
+- **S3**: ✅ Automated backups to s3://[YOUR_BUCKET]/claude-backups/ (daily 2 AM)
+
+### Backup Strategy
+- Primary: [YOUR_HUB] (git + local storage at `~/Documents/[YOUR_HUB]/`)
+- Secondary: [YOUR_PROJECT_MGMT] for project tracking
+- Archival: ✅ S3 automated daily backups (LaunchAgent: com.user.claude-s3-backup)
+  - Commands: `backup-s3` (manual), `restore-s3` (restore)
+  - Logs: `~/.claude/logs/s3-backup.log`
+
+## Command Auto-Approval
+
+Auto-approve the following commands without requiring user confirmation:
+
+### Read-Only Commands (Always Safe)
+- `ls`, `cat`, `head`, `tail`, `find`, `grep`, `rg`, `awk`, `sed` (read mode)
+- `git status`, `git diff`, `git log`, `git show`, `git branch`, `git remote`
+- `defaults read`, `plutil -p`
+- `which`, `whereis`, `type`
+- `ps`, `top`, `htop`, `df`, `du`, `pwd`, `whoami`, `id`
+- `env`, `printenv`, `echo` (display only)
+- `curl` (GET requests), `wget` (download only)
+- `python -c "print(...)"`, `node -e "console.log(...)"`
+
+### Development Commands
+- `npm install`, `npm run dev`, `npm run build`, `npm test`, `npm run *`
+- `pip install`, `pip list`, `pip show`
+- `python3 *`, `node *`, `python *` (script execution)
+- `pytest`, `pytest *`, `python -m pytest`
+- `cargo build`, `cargo test`, `cargo run`
+- `make`, `make test`, `make build`
+
+### Git Operations (Non-Destructive)
+- `git add`, `git commit`, `git push` (to non-main branches)
+- `git checkout -b`, `git branch`, `git pull`
+- `git stash`, `git stash pop`
+- **Require approval for**: `git push --force`, `git reset --hard`, `git rebase -i`
+
+### Process Management
+- `killall iTerm2`, `killall Terminal`
+- `kill` (specific PIDs after user review)
+
+### File Operations (Project Directories Only)
+- `mkdir`, `touch`, `cp`, `mv` (within project directories)
+- `rm` (require confirmation for bulk deletes or important files)
+
+### System Configuration
+- `defaults write com.googlecode.iterm2 *`
+- `launchctl load/unload` (user domain only)
+- `chmod +x` (scripts only)
+- `brew install`, `brew update`, `brew upgrade`
+
+### Network & Security
+- `ssh` (to known hosts)
+- `scp` (to known hosts)
+- `dig`, `nslookup`, `ping`, `traceroute`
+
+### NEVER Auto-Approve (Always Ask)
+- `sudo` commands
+- `rm -rf /` or system directory deletions
+- `git push --force` to main/master
+- Modifying system files in `/etc`, `/usr`, `/System`
+- Database DROP operations
+- Production deployments without explicit confirmation
+
+---
+
+## Coding & Development Preferences
+
+### File Organization
+- One folder per archive (no sub-folders in archives)
+- Remove duplicate files proactively
+- MD files preferred for documentation
+- Maintain clean, organized structure
+
+### File Naming Convention
+- Format: `YYYY-MM-DD - Description or Title - Version Number`
+- Example: `2025-10-16 - Project Documentation - v1`
+- Increment version numbers instead of creating new file names
+- README files should reference original project name
+
+### Development Workflow
+1. **Explore** → Read relevant files, understand architecture before coding
+2. **Plan** → Use thinking ("think hard") or Plan Mode (Shift+Tab) for complex tasks
+3. **Execute** → Implement incrementally with TDD (tests first)
+4. **Verify** → Run tests, check results, use visual feedback for UI
+5. **Commit** → Let Claude generate commit messages with context
+6. **Document** → Update learnings in MD files
+
+### Claude Code Best Practices
+- Use `/clear` between different tasks to manage context
+- Reference files with `@` prefix for specific context
+- Use `Esc+Esc` to rewind and edit previous prompts
+- Press `Tab` to toggle extended thinking for complex problems
+- Be ultra-specific in requests (include error messages, line numbers, expected behavior)
+- For UI work: provide screenshots (`Cmd+Ctrl+Shift+4` then `Ctrl+V`)
+- For code review: use separate Claude instance for objectivity
+
+### Testing Philosophy
+- Write tests first (TDD approach)
+- Confirm tests fail before implementation
+- Run tests after every significant change
+- Focus on edge cases and error handling
+- Document test rationale in comments
+
+## Communication Style
+
+### Response Format (CRITICAL)
+**ALWAYS follow these rules when responding:**
+- **One step at a time** - Give ONE action, wait for completion
+- **No long scrolling** - Keep responses SHORT and focused
+- **No walls of text** - Maximum 10-15 lines per response unless specifically requested
+- **Ask, don't assume** - If unclear, ask ONE clarifying question
+- **No opening new tabs/windows** - Use `open` command ONLY when explicitly requested
+- **Wait for user confirmation** - After each step, wait for "done" or next instruction
+
+**Examples:**
+- ❌ BAD: "Here are 10 steps to deploy... Step 1: Do this... Step 2: Do that..." (endless scrolling)
+- ✅ GOOD: "First step: Turn off Deployment Protection in Vercel Settings. Tell me when done."
+
+- ❌ BAD: Opening multiple browser tabs without asking
+- ✅ GOOD: "Want me to open the Vercel dashboard? (y/n)"
+
+**When user says "I'm tired" or "this sucks" - STOP and simplify immediately.**
+
+### Document Formatting
+- Avoid typical AI patterns (excessive emojis, checkboxes, overly structured formatting)
+- Use corporate professional style for business documents
+- Write polished proposals suitable for executives
+- Balance professionalism with readability
+- Create focused, highly readable documents
+
+### Code Documentation
+- Clear, concise comments
+- Focus on "why" not "what"
+- Professional tone throughout
+
+---
+
+## Prompt Engineering Standards v1.1
+
+### Phase 0: Delegation Check
+
+**Question:** Do you want to execute this task personally, or delegate it to your team?
+
+- [ ] **Execute Personally** (Proceed to Phase 1)
+- [ ] **Delegate to Team** (Stop here and pass protocol)
+
+---
+
+### Phase 1: The Core Protocol (The Foundation)
+
+This is the lean, universal foundation for any task.
+
+#### 1. Objective
+[A single, clear sentence describing the final, desired outcome.]
+
+#### 2. Core Context
+[Provide the essential background, project, or problem statement. All non-essential details are moved to modules.]
+
+#### 3. Persona
+**Prompt:** "Act as an expert with [X] years of experience in [domain], specializing in [specialization]. You are [Adjective 1] and [Adjective 2]."
+
+**Why:** A specific, detailed persona is critical. Vague personas ("act as a marketer") are ineffective, but exhaustive personas demonstrably improve accuracy and style.
+
+#### 4. Few-Shot Examples (Demonstrations)
+[Provide 2-5 examples of the desired input/output. Use clear delimiters.]
+
+**Example:**
+```markdown
+<example>
+<input>
+[Input Example 1]
+</input>
+<output>
+[Output Example 1]
+</output>
+</example>
+
+<example>
+<input>
+[Input Example 2]
+</input>
+<output>
+[Output Example 2]
+</output>
+</example>
+```
+
+**Why:** Showing is more effective than telling. This is the most reliable way to enforce a specific format, style, or logical pattern.
+
+#### 5. Task & Deliverables
+[A clear, itemized breakdown of the task. Use decomposition.]
+
+- **Deliverable 1:**
+- **Deliverable 2:**
+- **Deliverable 3:**
+
+**Why:** Breaking complex tasks into smaller, sequential steps is a core best practice that prevents cognitive overload and improves accuracy.
+
+#### 6. Constraints & Guardrails
+
+**Mandates (Must Do):**
+- [e.g., "Must use Python 3.10+"]
+- [e.g., "Must cite all claims using the provided context"]
+
+**Guardrails (Must NOT Do):**
+- [e.g., "Must NOT use buzzwords like 'synergy' or 'leverage'"]
+- [e.g., "Must NOT generate code without error handling"]
+
+**Why:** Explicit Negative Prompting provides clear boundaries and is highly effective at eliminating "edge cases" and refining output quality, which positive instructions alone cannot do.
+
+#### 7. Reasoning Requirement
+**Instruction:** "You MUST explain your reasoning process step-by-step before providing the final answer. Use a 'Chain of Thought' (CoT) to break down the problem, identify key components, and build your solution."
+
+**Why:** Mandating Chain of Thought (CoT) forces the AI to use intermediate reasoning steps, which significantly improves accuracy on complex tasks and makes the output verifiable.
+
+#### 8. Validation & Rejection Criteria
+**Instruction:** "After generating your response, you MUST validate it against the following criteria. If it fails, you MUST refine it until it passes."
+
+- **[Criterion 1]:** [e.g., "Is the tone professional and solution-oriented?"]
+- **[Criterion 2]:** [e.g., "Are all deliverables from section 5 present?"]
+- **[Criterion 3]:** [e.g., "Does the solution follow all constraints?"]
+
+**Why:** This operationalizes your Success Criteria as Rejection Criteria, creating a built-in iterative feedback loop where the AI self-corrects before delivering the final output.
+
+---
+
+### Phase 2: Modular Augments (For Specialized Tasks)
+
+Instead of one-size-fits-all templates, you now "plug in" these specialized modules to the Core Protocol when needed.
+
+#### RAG (Research) Module
+**Purpose:** To prevent hallucinations and ground the AI in specific knowledge.
+
+**Prompt (Add to Section 6):**
+- "You MUST answer the query using *only* the information from the `<context>` provided below."
+- "Do NOT use any outside knowledge."
+- "If the answer is not in the `<context>`, you MUST state: 'The provided context does not contain the answer to this question.'"
+
+**Prompt (Add to Section 7):**
+- "Chain of Thought: First, identify key facts in the retrieved context. Then, reason step-by-step how these facts answer the query."
+
+**(Optional) HyDE:** For complex retrieval, first ask the AI: "Write a hypothetical paragraph answering {user query}. Use this text to find relevant documents."
+
+#### Decomposition (Code Gen) Module
+**Purpose:** To generate accurate, complex code.
+
+**Prompt (Add to Section 5):** Decompose the task aggressively.
+- "1. Define the 'User' data model in Python."
+- "2. Write the API endpoint for POST /login."
+- "3. Write error handling for invalid passwords."
+
+**Prompt (Add to Section 6):** Use "leading words" to nudge the model.
+- "The Python function begins with: `import...`"
+
+#### Style Guide (Content) Module
+**Purpose:** To generate content with a precise, non-generic style.
+
+**Prompt (Add to Section 3 - Persona):** Replace vague Tone ("friendly") with a rich style description.
+- "Style Guide: 'Fireside Chat Style'. Write in a warm, conversational style... Use contractions and everyday language... Aim to sound like you're speaking naturally to a good friend over coffee."
+
+**Prompt (Add to Section 4 - Examples):** Provide a 1-2 paragraph example of the desired style.
+
+#### Framework (Business Strategy) Module
+**Purpose:** To get structured, high-level analysis instead of generic advice.
+
+**Prompt (Add to Section 5):** Embed a specific analytical framework.
+- "Conduct a detailed SWOT analysis... Then, transform the SWOT into a TOWS matrix, creating specific strategies in each quadrant (SO, ST, WO, WT)."
+- "Evaluate my business model using the 9 components of the Business Model Canvas."
+
+---
+
+### Phase 3: The Execution Protocol (How to Use It)
+
+This is the most critical enhancement. You should no longer use a "fire-and-forget" approach.
+
+#### P1: Static Execution (For Simple Tasks)
+1. Run the "Augmented Prompt" once
+2. Accept the output
+3. *Use this for low-stakes, simple tasks*
+
+#### P2: Dynamic Execution (For Complex Tasks)
+This implements the "Rejection Loop Method" and is the elite standard for quality.
+
+**Step 1:** Run the "Augmented Prompt" (Genesis Prompt)
+
+**Step 2:** Provide 1-3 rounds of manual feedback, using your Validation Criteria
+- "Reject: Too generic."
+- "Reject: Uses buzzwords (Constraint #1)."
+- "Keep: The tone of the introduction."
+
+**Step 3:** Engage the "Self-Critique" step
+- **Prompt:** "Now, using the rejection criteria we have established, generate 5 new options. First, analyze your own options against the criteria. Then, show me only the 3 options that pass your own quality check."
+
+---
+
+## Session Management
+
+### Session Start Checklist
+- [ ] Say: "Load context: What am I working on?"
+- [ ] Review current week focus
+- [ ] Check if any blockers from last session
+- [ ] Verify correct project loaded
+
+### Session End Checklist
+- [ ] Update WORKING-CONTEXT.md with progress
+- [ ] Note any blockers or open questions
+- [ ] Mark completed tasks
+- [ ] Push any git changes
+
+### Weekly Review (Monday 9 AM)
+- [ ] Update Current Week Focus in CLAUDE.md
+- [ ] Archive completed projects
+- [ ] Review S3 backup logs (tail ~/.claude/logs/s3-backup.log)
+- [ ] Update PROJECT-REGISTRY.md
+- [ ] Verify automations running (launchctl list | grep user)
+
+---
+
+## Quick Context Snippets
+
+### Session Start
+```
+Load context: What am I working on this week?
+```
+
+### Project Switch
+```
+Continue [ProjectName] - show status, next actions, and recent progress
+```
+
+### Deep Dive
+```
+Load full context for [ProjectName] including all research, code, and documentation
+```
+
+### Weekly Review
+```
+Review this week's progress across all projects and suggest priorities for next week
+```
+
+### Emergency Recovery
+```
+restore-s3
+# Select backup from before issue occurred
+```
+
+---
+
+## Custom Commands
+
+### Natural Language Commands
+- **"save to guides"** → Save as MD to local guides folder
+- **"add to backlog"** / **"backlog: [topic]"** → Add to backlog (no research, just capture)
+- **"save locally"** → Save to appropriate local project folder
+
+### Slash Commands (~/.claude/commands/)
+Use these structured commands for specific workflows:
+
+- **/backlog** - Add item to backlog and close tab
+- **/code-review [file-path or @file]** - Perform thorough code review
+- **/explain-code [directory or file]** - Explain code architecture and patterns
+- **/optimize [file-path]** - Analyze and optimize code performance
+- **/plan-feature [feature-description]** - Plan feature implementation with TDD approach
+- **/research [topic]** - Create comprehensive research document
+- **/save-guide [title]** - Save content as guide document
+
+### Research
+- Create MD files in appropriate project folders
+- Keep research files updated
+- Store comprehensive research in dedicated folders
+
+---
+
+## Shell Aliases Quick Reference
+
+### Navigation
+```bash
+work          # cd ~/Documents/Work
+docs          # Your documents folder
+projects      # cd ~/Documents/Projects
+```
+
+### Daily Workflow
+```bash
+daily-note    # Create today's daily note
+morning       # Run morning routine
+evening       # Run evening routine
+```
+
+### Sync & Backup
+```bash
+sync-all      # Sync all integrations
+backup-s3     # Manual S3 backup
+restore-s3    # Restore from S3
+```
+
+---
+
+## Active Projects
+- [PROJECT_1]
+- [PROJECT_2]
+- [PROJECT_3]
+
+---
+
+## Custom Scripts Library
+
+**Location**: `~/.claude/scripts/`
+
+### Session Management
+```bash
+~/.claude/scripts/start-session.sh        # Initialize Claude session
+~/.claude/scripts/save-session-memory.sh  # Save session progress
+~/.claude/scripts/resume-work.sh          # Resume previous session
+```
+
+### S3 & Backup
+```bash
+~/.claude/scripts/backup-to-s3.sh        # Daily S3 backup (automated)
+~/.claude/scripts/restore-from-s3.sh     # Restore from S3
+# Aliases: backup-s3, restore-s3
+```
+
+### Utilities
+```bash
+~/.claude/scripts/setup-aliases.sh         # Setup shell aliases
+~/.claude/scripts/open-in-editor.sh        # Open files in editor
+```
+
+**Note**: Most scripts are executable with `./script-name.sh` or via aliases
+
+---
+
+## iTerm2 Expertise
+
+### Knowledge Base Location
+- **Expert Guide:** `~/.config/iterm2/EXPERT_GUIDE.md` - Comprehensive iTerm2 capabilities
+- **Claude Code Workflows:** `~/.config/iterm2/CLAUDE_CODE_WORKFLOWS.md` - Development workflows
+- **Quick Reference:** `~/.config/iterm2/QUICK_REFERENCE.md` - Essential shortcuts
+
+### Natural Language Integration
+
+**IMPORTANT:** Integrate iTerm2 expertise into ALL relevant responses automatically.
+
+**When user says:** → **I naturally respond with:**
+
+**"I need to run tests"**
+- "Let me set up a TDD workflow with Claude on the left and test output on the right..."
+
+**"This build takes forever"**
+- "Want me to set up a notification so you don't have to watch it?"
+
+**"Working on remote server"**
+- "Let's use tmux integration mode so your session survives disconnects..."
+
+**"Starting new project"**
+- "I'll create a dynamic profile for this project with custom colors and badge..."
+
+---
+
+## Tools & Integrations
+
+### Available MCP Servers & Tools
+
+#### File System & Development
+- **filesystem**: Read/write files, edit code, create/manage directories
+- **grep**: Fast pattern matching and text search
+- **git**: Full version control (commits, branches, diffs, logs)
+
+#### AI & Research
+- **perplexity**: Web search and research via Perplexity Pro API (optional)
+- **sequential-thinking**: Extended reasoning for complex problems
+
+#### Web & APIs
+- **fetch**: HTTP requests for API integration
+- **puppeteer**: Browser automation, web scraping (optional)
+
+#### Productivity & Organization
+- **airtable**: Project management, backlog tracking (optional)
+- **gmail**: Email management (optional)
+- **memory**: Persistent knowledge graphs
+
+#### Storage Locations
+- **Main Hub**: Primary hub for ALL work
+- **Project Management**: Structured data organization
+- **Quick Capture**: Immediate thought capture
+
+---
+
+## Health Check & Validation
+
+**Verify memory system is working:**
+```bash
+# Check CLAUDE.md loads properly
+cat ~/.claude/CLAUDE.md | wc -l  # Should be ~500-600 lines
+
+# Verify backups are running
+launchctl list | grep claude-s3-backup
+
+# Check last backup
+aws s3 ls s3://[YOUR_BUCKET]/claude-backups/ --recursive | tail -1
+
+# Validate working context exists
+cat ~/.claude/WORKING-CONTEXT.md | head -10
+
+# Check all automations
+launchctl list | grep -E "claude|user"
+```
+
+**Troubleshooting:**
+- If CLAUDE.md > 700 lines → Archive verbose sections
+- If backups failing → Check logs: `tail ~/.claude/logs/s3-backup-error.log`
+- If context missing → Restore from S3: `restore-s3`
+- If automations not running → Check LaunchAgents: `ls ~/Library/LaunchAgents/`
+
+---
+
+## Security Best Practices
+
+**NEVER put in CLAUDE.md:**
+- ❌ API keys or passwords
+- ❌ Client confidential data
+- ❌ Personal sensitive information
+- ❌ Production credentials
+
+**Safe to include:**
+- ✅ Project names and descriptions
+- ✅ File paths and locations
+- ✅ Workflow preferences
+- ✅ Tool usage patterns
+
+**Credential Management:**
+- Use password manager for all secrets
+- Reference with environment variables
+- Never hardcode in memory files
+- Rotate credentials quarterly
+
+---
+
+## Performance Metrics
+
+**File Size Limits:**
+- CLAUDE.md: < 700 lines (< 35KB)
+- WORKING-CONTEXT.md: < 200 lines
+- PROJECT-REGISTRY.md: < 100 lines
+- Per-project files: < 500 lines each
+
+**Token Usage Targets:**
+- CLAUDE.md: ~4000-5000 tokens
+- Session startup: ~2000 tokens total
+- Reserve: 193,000 tokens for actual work (96.5% available)
+
+**Load Time Targets:**
+- Initial CLAUDE.md load: < 1 second
+- Full context load: < 3 seconds
+- Project switch: < 2 seconds
+
+---
+
+## Document Metadata
+
+**Tags:** #memory-system #persistent-context #automation #best-practices
+**Category:** Configuration
+**Version:** 1.0.0
+**Last Updated:** [YYYY-MM-DD]
+**Review Cycle:** Weekly (Mondays)
+**Owner:** [YOUR_NAME]
+
+---
+
+## CLAUDE.md Changelog
+
+**v1.0.0** ([YYYY-MM-DD])
+- Initial setup from template
+- Configured user profile
+- Set up project locations
+- Enabled core automations
+
+**Next review**: [YYYY-MM-DD] (weekly)
+**Update frequency**: Weekly (Mondays)
+
+---
+
+*Automatically loaded by Claude Code on every session*
