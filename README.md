@@ -91,7 +91,7 @@ Battle-tested 3-phase protocol:
 
 ```bash
 # 1. Clone this repository
-git clone https://github.com/yourusername/claude-md-setup.git
+git clone https://github.com/mikefinneran-sudo/claude-md-setup.git
 cd claude-md-setup
 
 # 2. Run the installer
@@ -500,8 +500,8 @@ MIT License - See LICENSE file for details
 ## Support
 
 - **Documentation**: [/docs](/docs)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/claude-md-setup/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/claude-md-setup/discussions)
+- **Issues**: [GitHub Issues](https://github.com/mikefinneran-sudo/claude-md-setup/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/mikefinneran-sudo/claude-md-setup/discussions)
 
 ---
 
