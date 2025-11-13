@@ -27,40 +27,58 @@
 ### Search Order (NEVER SKIP):
 1. **LaunchAgents** (PRIMARY): `ls ~/Library/LaunchAgents/`
 2. **Crontab** (SECONDARY): `crontab -l`
-3. **Script directories**: `~/.claude/scripts/`, `~/Documents/Projects/.scripts/`
-4. **Project scripts**: `~/Documents/Projects/*/. scripts/`
+3. **Script directories**: `~/Documents/ObsidianVault/.scripts/`, `~/.claude/scripts/`
+4. **Project scripts**: `~/Documents/ObsidianVault/Projects/*/.scripts/`
 
 ### Reference Document
 **Location:** `~/.claude/AUTOMATION_LOCATIONS.md`
 **Contains:** All scheduled tasks, script locations, manual run commands
 
 ### Known Automations:
-- **S3 Backups** - ✅ Daily 2 AM - LaunchAgent: com.user.claude-s3-backup
+- **S3 Backups** - ✅ Daily 2 AM - LaunchAgent: com.mikefinneran.claude-s3-backup
   - Script: `~/.claude/scripts/backup-to-s3.sh`
   - Logs: `~/.claude/logs/s3-backup.log`
   - Manual: `backup-s3` or `restore-s3`
-- **Daily Notes** - Daily - LaunchAgent: com.user.dailynote.plist
-  - Creates daily notes in your note system
-  - Alias: `daily-note`
+- **Daily Notes** - Daily - LaunchAgent: com.lifehub.dailynote.plist
+  - Creates daily notes in Obsidian
+  - Alias: `obs-daily` or `vdaily`
+- **Google Drive Sync** - Scheduled - LaunchAgent: com.lifehub.gdrive-sync.plist
+  - Syncs documents to Google Drive
+  - Alias: `obs-sync-drive`
+- **Weekly Review** - Weekly - LaunchAgent: com.lifehub.weeklyreview.new.plist
+  - Automated weekly review generation
+- **Airtable Sync** - Every 15 minutes - LaunchAgent: com.mikefinneran.airtable-sync.plist
+  - Syncs Obsidian to Airtable
+  - Alias: `at-sync` or `airtable-sync`
+  - Logs: `at-log`
+- **GitHub → Airtable Sync** - ✅ Daily 9 AM - LaunchAgent: com.mikefinneran.github-airtable-sync
+  - Syncs GitHub repos to Airtable Projects table
+  - Script: `~/.claude/scripts/github-airtable-sync.py`
+  - Manual: `python3 ~/.claude/scripts/github-airtable-sync.py`
+  - Logs: `~/.claude/logs/github-airtable-sync-stdout.log`
+- **Perplexity Research Update** - Daily midnight - `/Users/mikefinneran/Documents/ObsidianVault/Projects/Preplexity Pro Research/.scripts/update_research_database.py`
+- **Cost Tracking** - Weekly Sundays 9 AM - `~/Documents/ObsidianVault/.scripts/run-all-trackers.sh`
 
 **NEVER build new automation tools without checking existing ones first.**
 
 ---
 
 ## User Profile
-- **Name**: [YOUR_NAME]
-- **Primary Use Case**: [YOUR_PRIMARY_USE_CASE]
-- **Primary Email**: [YOUR_EMAIL]
+- **Name**: Mike Finneran
+- **Primary Use Case**: Building an AI consulting business
+- **Primary Email**: mike.finneran@gmail.com
+- **Work Email**: fly-flat.com account (do NOT use unless explicitly directed)
 
 ## Current Week Focus
 
-**Week of**: [YYYY-MM-DD] (Week XX)
-**Primary Project**: [PROJECT_NAME]
-**Status**: [CURRENT_STATUS]
+**Week of**: 2025-11-12 (Week 46)
+**Primary Project**: Claude.md persistent memory cleanup
+**Status**: Optimizing CLAUDE.md to performance targets
 **Next Actions**:
-- [ ] [ACTION_ITEM_1]
-- [ ] [ACTION_ITEM_2]
-- [ ] [ACTION_ITEM_3]
+- [x] Create shareable repository for claude-md-setup
+- [ ] Reduce CLAUDE.md to < 700 lines
+- [ ] Extract verbose sections to guides
+- [ ] Update documentation
 
 ---
 
@@ -89,18 +107,18 @@
 ## Default File Locations
 
 ### Primary Storage
-- **Main Hub**: Primary hub for ALL work (`~/Documents/[YOUR_HUB]/`)
-  - Projects: `~/Documents/[YOUR_HUB]/Projects/`
+- **ObsidianVault**: Primary hub for ALL work (`~/Documents/ObsidianVault/`)
+  - Projects: `~/Documents/ObsidianVault/Projects/`
   - Daily notes, documentation, research
   - Version controlled with git
-- **Project Management**: [YOUR_PROJECT_MGMT_TOOL]
-- **Quick Capture**: [YOUR_QUICK_CAPTURE_TOOL]
-- **S3**: ✅ Automated backups to s3://[YOUR_BUCKET]/claude-backups/ (daily 2 AM)
+- **Airtable**: Project management, backlog, client tracking
+- **Apple Notes**: Quick capture only (migrate to Obsidian)
+- **S3**: ✅ Automated backups to s3://mikefinneran-personal/claude-backups/ (daily 2 AM)
 
 ### Backup Strategy
-- Primary: [YOUR_HUB] (git + local storage at `~/Documents/[YOUR_HUB]/`)
-- Secondary: [YOUR_PROJECT_MGMT] for project tracking
-- Archival: ✅ S3 automated daily backups (LaunchAgent: com.user.claude-s3-backup)
+- Primary: ObsidianVault (git + local storage at `~/Documents/ObsidianVault/`)
+- Secondary: Airtable for project tracking, Apple Notes for quick capture
+- Archival: ✅ S3 automated daily backups (LaunchAgent: com.mikefinneran.claude-s3-backup)
   - Commands: `backup-s3` (manual), `restore-s3` (restore)
   - Logs: `~/.claude/logs/s3-backup.log`
 
@@ -132,14 +150,6 @@ Auto-approve the following commands without requiring user confirmation:
 - `git stash`, `git stash pop`
 - **Require approval for**: `git push --force`, `git reset --hard`, `git rebase -i`
 
-### Process Management
-- `killall iTerm2`, `killall Terminal`
-- `kill` (specific PIDs after user review)
-
-### File Operations (Project Directories Only)
-- `mkdir`, `touch`, `cp`, `mv` (within project directories)
-- `rm` (require confirmation for bulk deletes or important files)
-
 ### System Configuration
 - `defaults write com.googlecode.iterm2 *`
 - `launchctl load/unload` (user domain only)
@@ -150,6 +160,7 @@ Auto-approve the following commands without requiring user confirmation:
 - `ssh` (to known hosts)
 - `scp` (to known hosts)
 - `dig`, `nslookup`, `ping`, `traceroute`
+- VPN commands (`piactl connect`, `piactl disconnect`)
 
 ### NEVER Auto-Approve (Always Ask)
 - `sudo` commands
@@ -171,7 +182,7 @@ Auto-approve the following commands without requiring user confirmation:
 
 ### File Naming Convention
 - Format: `YYYY-MM-DD - Description or Title - Version Number`
-- Example: `2025-10-16 - Project Documentation - v1`
+- Example: `2025-10-16 - Sales Organization Growth Strategy - v1`
 - Increment version numbers instead of creating new file names
 - README files should reference original project name
 
@@ -222,7 +233,8 @@ Auto-approve the following commands without requiring user confirmation:
 ### Document Formatting
 - Avoid typical AI patterns (excessive emojis, checkboxes, overly structured formatting)
 - Use corporate professional style for business documents
-- Write polished proposals suitable for executives
+- US Federal Government style formatting for formal documents
+- Write polished proposals suitable for C-suite executives
 - Balance professionalism with readability
 - Create focused, highly readable documents
 
@@ -233,161 +245,17 @@ Auto-approve the following commands without requiring user confirmation:
 
 ---
 
-## Prompt Engineering Standards v1.1
+## Prompt Engineering Standards
 
-### Phase 0: Delegation Check
+**Full guide:** `~/.claude/guides/PROMPT-ENGINEERING-v1.1.md`
 
-**Question:** Do you want to execute this task personally, or delegate it to your team?
+### Quick Reference:
+**Phase 0:** Delegation Check (Execute personally, Hybrid LLM Router, or CrewAI)
+**Phase 1:** Core Protocol (8 components: Objective, Context, Persona, Examples, Deliverables, Constraints, Reasoning, Validation)
+**Phase 2:** Modular Augments (RAG, Decomposition, Style Guide, Framework)
+**Phase 3:** Execution Protocol (P1: Static for simple tasks, P2: Dynamic with Rejection Loop for complex)
 
-- [ ] **Execute Personally** (Proceed to Phase 1)
-- [ ] **Delegate to Team** (Stop here and pass protocol)
-
----
-
-### Phase 1: The Core Protocol (The Foundation)
-
-This is the lean, universal foundation for any task.
-
-#### 1. Objective
-[A single, clear sentence describing the final, desired outcome.]
-
-#### 2. Core Context
-[Provide the essential background, project, or problem statement. All non-essential details are moved to modules.]
-
-#### 3. Persona
-**Prompt:** "Act as an expert with [X] years of experience in [domain], specializing in [specialization]. You are [Adjective 1] and [Adjective 2]."
-
-**Why:** A specific, detailed persona is critical. Vague personas ("act as a marketer") are ineffective, but exhaustive personas demonstrably improve accuracy and style.
-
-#### 4. Few-Shot Examples (Demonstrations)
-[Provide 2-5 examples of the desired input/output. Use clear delimiters.]
-
-**Example:**
-```markdown
-<example>
-<input>
-[Input Example 1]
-</input>
-<output>
-[Output Example 1]
-</output>
-</example>
-
-<example>
-<input>
-[Input Example 2]
-</input>
-<output>
-[Output Example 2]
-</output>
-</example>
-```
-
-**Why:** Showing is more effective than telling. This is the most reliable way to enforce a specific format, style, or logical pattern.
-
-#### 5. Task & Deliverables
-[A clear, itemized breakdown of the task. Use decomposition.]
-
-- **Deliverable 1:**
-- **Deliverable 2:**
-- **Deliverable 3:**
-
-**Why:** Breaking complex tasks into smaller, sequential steps is a core best practice that prevents cognitive overload and improves accuracy.
-
-#### 6. Constraints & Guardrails
-
-**Mandates (Must Do):**
-- [e.g., "Must use Python 3.10+"]
-- [e.g., "Must cite all claims using the provided context"]
-
-**Guardrails (Must NOT Do):**
-- [e.g., "Must NOT use buzzwords like 'synergy' or 'leverage'"]
-- [e.g., "Must NOT generate code without error handling"]
-
-**Why:** Explicit Negative Prompting provides clear boundaries and is highly effective at eliminating "edge cases" and refining output quality, which positive instructions alone cannot do.
-
-#### 7. Reasoning Requirement
-**Instruction:** "You MUST explain your reasoning process step-by-step before providing the final answer. Use a 'Chain of Thought' (CoT) to break down the problem, identify key components, and build your solution."
-
-**Why:** Mandating Chain of Thought (CoT) forces the AI to use intermediate reasoning steps, which significantly improves accuracy on complex tasks and makes the output verifiable.
-
-#### 8. Validation & Rejection Criteria
-**Instruction:** "After generating your response, you MUST validate it against the following criteria. If it fails, you MUST refine it until it passes."
-
-- **[Criterion 1]:** [e.g., "Is the tone professional and solution-oriented?"]
-- **[Criterion 2]:** [e.g., "Are all deliverables from section 5 present?"]
-- **[Criterion 3]:** [e.g., "Does the solution follow all constraints?"]
-
-**Why:** This operationalizes your Success Criteria as Rejection Criteria, creating a built-in iterative feedback loop where the AI self-corrects before delivering the final output.
-
----
-
-### Phase 2: Modular Augments (For Specialized Tasks)
-
-Instead of one-size-fits-all templates, you now "plug in" these specialized modules to the Core Protocol when needed.
-
-#### RAG (Research) Module
-**Purpose:** To prevent hallucinations and ground the AI in specific knowledge.
-
-**Prompt (Add to Section 6):**
-- "You MUST answer the query using *only* the information from the `<context>` provided below."
-- "Do NOT use any outside knowledge."
-- "If the answer is not in the `<context>`, you MUST state: 'The provided context does not contain the answer to this question.'"
-
-**Prompt (Add to Section 7):**
-- "Chain of Thought: First, identify key facts in the retrieved context. Then, reason step-by-step how these facts answer the query."
-
-**(Optional) HyDE:** For complex retrieval, first ask the AI: "Write a hypothetical paragraph answering {user query}. Use this text to find relevant documents."
-
-#### Decomposition (Code Gen) Module
-**Purpose:** To generate accurate, complex code.
-
-**Prompt (Add to Section 5):** Decompose the task aggressively.
-- "1. Define the 'User' data model in Python."
-- "2. Write the API endpoint for POST /login."
-- "3. Write error handling for invalid passwords."
-
-**Prompt (Add to Section 6):** Use "leading words" to nudge the model.
-- "The Python function begins with: `import...`"
-
-#### Style Guide (Content) Module
-**Purpose:** To generate content with a precise, non-generic style.
-
-**Prompt (Add to Section 3 - Persona):** Replace vague Tone ("friendly") with a rich style description.
-- "Style Guide: 'Fireside Chat Style'. Write in a warm, conversational style... Use contractions and everyday language... Aim to sound like you're speaking naturally to a good friend over coffee."
-
-**Prompt (Add to Section 4 - Examples):** Provide a 1-2 paragraph example of the desired style.
-
-#### Framework (Business Strategy) Module
-**Purpose:** To get structured, high-level analysis instead of generic advice.
-
-**Prompt (Add to Section 5):** Embed a specific analytical framework.
-- "Conduct a detailed SWOT analysis... Then, transform the SWOT into a TOWS matrix, creating specific strategies in each quadrant (SO, ST, WO, WT)."
-- "Evaluate my business model using the 9 components of the Business Model Canvas."
-
----
-
-### Phase 3: The Execution Protocol (How to Use It)
-
-This is the most critical enhancement. You should no longer use a "fire-and-forget" approach.
-
-#### P1: Static Execution (For Simple Tasks)
-1. Run the "Augmented Prompt" once
-2. Accept the output
-3. *Use this for low-stakes, simple tasks*
-
-#### P2: Dynamic Execution (For Complex Tasks)
-This implements the "Rejection Loop Method" and is the elite standard for quality.
-
-**Step 1:** Run the "Augmented Prompt" (Genesis Prompt)
-
-**Step 2:** Provide 1-3 rounds of manual feedback, using your Validation Criteria
-- "Reject: Too generic."
-- "Reject: Uses buzzwords (Constraint #1)."
-- "Keep: The tone of the introduction."
-
-**Step 3:** Engage the "Self-Critique" step
-- **Prompt:** "Now, using the rejection criteria we have established, generate 5 new options. First, analyze your own options against the criteria. Then, show me only the 3 options that pass your own quality check."
+**LLM Router:** `~/crewai-specialists/llm-router/` - 25 model fleet (20 local FREE + 5 commercial)
 
 ---
 
@@ -410,7 +278,7 @@ This implements the "Rejection Loop Method" and is the elite standard for qualit
 - [ ] Archive completed projects
 - [ ] Review S3 backup logs (tail ~/.claude/logs/s3-backup.log)
 - [ ] Update PROJECT-REGISTRY.md
-- [ ] Verify automations running (launchctl list | grep user)
+- [ ] Verify automations running (launchctl list | grep claude)
 
 ---
 
@@ -448,7 +316,7 @@ restore-s3
 
 ### Natural Language Commands
 - **"save to guides"** → Save as MD to local guides folder
-- **"add to backlog"** / **"backlog: [topic]"** → Add to backlog (no research, just capture)
+- **"add to backlog"** / **"backlog: [topic]"** → Add to Airtable backlog (no research, just capture)
 - **"save locally"** → Save to appropriate local project folder
 
 ### Slash Commands (~/.claude/commands/)
@@ -473,31 +341,115 @@ Use these structured commands for specific workflows:
 
 ### Navigation
 ```bash
+vault         # cd ~/Documents/ObsidianVault
 work          # cd ~/Documents/Work
-docs          # Your documents folder
-projects      # cd ~/Documents/Projects
+docs          # Google Drive Documents
+gdocs         # Same as docs
 ```
 
-### Daily Workflow
+### Obsidian Vault
 ```bash
-daily-note    # Create today's daily note
-morning       # Run morning routine
-evening       # Run evening routine
+# Daily Workflow
+vdaily        # Create and open today's daily note
+vmorning      # Run morning routine script
+vevening      # Run evening routine script
+
+# Vault Management
+vopen         # Open Obsidian
+vgit          # Git status in vault
+vpush         # Git commit and push vault
+
+# Sync & Integration
+obs-sync-email # Sync Gmail to Obsidian
+obs-sync-cal  # Sync calendar to Obsidian
+obs-sync-all  # Sync both email and calendar
+obs-sync-drive # Sync documents to Google Drive
+
+# Utilities
+obs-daily     # Create daily note
+obs-metrics   # Update metrics
+obs-open      # Open Obsidian Dashboard
+vscreenshot   # Daily screenshot capture
+vgranola      # Granola export script
 ```
 
-### Sync & Backup
+### Airtable & GitHub Sync
 ```bash
-sync-all      # Sync all integrations
-backup-s3     # Manual S3 backup
-restore-s3    # Restore from S3
+at-sync       # Sync Obsidian to Airtable
+airtable-sync # Full command
+at-log        # View Obsidian→Airtable sync logs
+
+# GitHub ↔ Airtable Sync
+github-sync='python3 ~/.claude/scripts/github-airtable-sync.py'  # Manual sync GitHub→Airtable
+github-sync-logs='ls -lt ~/.claude/logs/github-airtable-sync_*.log | head -1 | awk "{print \$NF}" | xargs cat'  # View latest log
+github-sync-status='launchctl list | grep github-airtable-sync'  # Check LaunchAgent status
 ```
+
+### 1Password
+```bash
+1pass-guide   # Full security guide
+1pass-quick   # Quick reference
+1pass-summary # Migration summary
+```
+
+### Claude Code CLI
+```bash
+# Quick access aliases (add to ~/.zshrc)
+c='claude'                                    # Start new claude session
+cp='claude -p'                                # Print mode (single query)
+cc='claude -c'                                # Continue last session
+yolo='claude --dangerously-skip-permissions'  # Skip prompts (use with caution)
+
+# In-session commands
+/init         # Create CLAUDE.md context file
+/help         # List available commands
+/exit         # Exit session
+/config       # Runtime configuration
+```
+
+**Setup iTerm2 Notifications:**
+```bash
+# 1. iTerm2 → Settings → Profiles → Terminal
+#    - Enable "Silence bell"
+#    - Enable "Send escape sequence-generated alerts"
+# 2. Configure claude:
+claude config set preferredNotifChannel iterm2
+```
+
+**Documentation:** `~/.config/iterm2/CLAUDE_CODE_INTEGRATION.md`
+
+---
+
+## Alfred Snippets (Keyboard Shortcuts)
+
+**Location**: `~/Desktop/Claude-Code-Snippets.alfredsnippets`
+**Documentation**: `~/.claude/ALFRED-SNIPPETS-GUIDE.md`
+
+### Most Important
+- **;ctx** - Session start - loads context ⭐
+- **;ws** - WalterSignal quick access
+- **;save** - Save session progress
+
+### All Snippets
+- `;cont` - Continue [project]
+- `;deep` - Deep dive [project]
+- `;weekly` - Weekly review
+- `;proj` - Show all projects
+- `;health` - Health check
+- `;restore` - Restore from S3
+- `;backlog` - Add to backlog
+- `;yesterday` - Yesterday's work
+- `;focus` - Update week focus
+
+**Installation**: Double-click `.alfredsnippets` file on Desktop
 
 ---
 
 ## Active Projects
-- [PROJECT_1]
-- [PROJECT_2]
-- [PROJECT_3]
+- AI consulting business development
+- AI prompting research
+- Web scraper development (parse.bot style)
+- Claude.md persistent memory system (shareable template)
 
 ---
 
@@ -510,6 +462,7 @@ restore-s3    # Restore from S3
 ~/.claude/scripts/start-session.sh        # Initialize Claude session
 ~/.claude/scripts/save-session-memory.sh  # Save session progress
 ~/.claude/scripts/resume-work.sh          # Resume previous session
+~/.claude/scripts/continue-enhanced.sh    # Enhanced continue command
 ```
 
 ### S3 & Backup
@@ -519,10 +472,11 @@ restore-s3    # Restore from S3
 # Aliases: backup-s3, restore-s3
 ```
 
-### Utilities
+### Airtable Integration
 ```bash
-~/.claude/scripts/setup-aliases.sh         # Setup shell aliases
-~/.claude/scripts/open-in-editor.sh        # Open files in editor
+~/.claude/scripts/create-airtable-bases.py         # Create Airtable bases
+~/.claude/scripts/log-activity-to-airtable.sh      # Log activities
+~/.claude/scripts/track-api-usage.py               # Track API usage
 ```
 
 **Note**: Most scripts are executable with `./script-name.sh` or via aliases
@@ -536,23 +490,13 @@ restore-s3    # Restore from S3
 - **Claude Code Workflows:** `~/.config/iterm2/CLAUDE_CODE_WORKFLOWS.md` - Development workflows
 - **Quick Reference:** `~/.config/iterm2/QUICK_REFERENCE.md` - Essential shortcuts
 
-### Natural Language Integration
+### Key Capabilities
+- Shell Integration (Cmd+Shift+Up/Down navigation, Cmd+Opt+A alerts)
+- Automation (Python API, triggers, dynamic profiles)
+- Advanced Features (tmux integration, split panes, status bar)
+- Development Layouts (TDD, Full Stack, Backend, Remote)
 
-**IMPORTANT:** Integrate iTerm2 expertise into ALL relevant responses automatically.
-
-**When user says:** → **I naturally respond with:**
-
-**"I need to run tests"**
-- "Let me set up a TDD workflow with Claude on the left and test output on the right..."
-
-**"This build takes forever"**
-- "Want me to set up a notification so you don't have to watch it?"
-
-**"Working on remote server"**
-- "Let's use tmux integration mode so your session survives disconnects..."
-
-**"Starting new project"**
-- "I'll create a dynamic profile for this project with custom colors and badge..."
+**Integration:** Automatically suggest iTerm2 optimizations during development work
 
 ---
 
@@ -566,22 +510,35 @@ restore-s3    # Restore from S3
 - **git**: Full version control (commits, branches, diffs, logs)
 
 #### AI & Research
-- **perplexity**: Web search and research via Perplexity Pro API (optional)
-- **sequential-thinking**: Extended reasoning for complex problems
+- **perplexity**: Web search and research via Perplexity Pro API (✅ Connected)
+  - Location: `/Users/mikefinneran/Documents/ObsidianVault/.mcp/perplexity-research`
+  - Use for: Current information, fact-checking, market research
 
 #### Web & APIs
-- **fetch**: HTTP requests for API integration
-- **puppeteer**: Browser automation, web scraping (optional)
+- **fetch**: HTTP requests (GET, POST, etc.) for API integration (✅ Built-in)
+- **puppeteer**: Browser automation, web scraping, screenshots (✅ Connected)
+  - Use for: Dynamic content, JavaScript-heavy sites, visual testing
+
+#### Security & Networking
+- **Private Internet Access (PIA) VPN**: Secure connection and IP rotation
+  - Use for: Web scraping IP rotation, geo-restriction bypass, privacy for research
+  - Integration: CLI (`piactl`) or GUI app
 
 #### Productivity & Organization
-- **airtable**: Project management, backlog tracking (optional)
-- **gmail**: Email management (optional)
-- **memory**: Persistent knowledge graphs
+- **apple-notes**: Primary note-taking (⚠️ MCP connection currently broken)
+- **airtable**: Project management, backlog tracking (✅ Connected)
+- **gmail**: Email management (✅ Connected - mike.finneran@gmail.com)
 
-#### Storage Locations
-- **Main Hub**: Primary hub for ALL work
-- **Project Management**: Structured data organization
-- **Quick Capture**: Immediate thought capture
+#### Memory & Context
+- **memory**: Persistent knowledge graphs (✅ Connected, underutilized)
+  - Use for: Long-term facts, relationships, project history
+- **sequential-thinking**: Extended reasoning (✅ Built-in)
+
+### Storage Locations
+- **ObsidianVault**: Primary hub (`~/Documents/ObsidianVault/`)
+- **Airtable**: Project management, backlog, client tracking
+- **Apple Notes**: Quick capture only (migrate to Obsidian)
+- **S3**: ✅ Automated backups (s3://mikefinneran-personal/claude-backups/)
 
 ---
 
@@ -596,13 +553,10 @@ cat ~/.claude/CLAUDE.md | wc -l  # Should be ~500-600 lines
 launchctl list | grep claude-s3-backup
 
 # Check last backup
-aws s3 ls s3://[YOUR_BUCKET]/claude-backups/ --recursive | tail -1
-
-# Validate working context exists
-cat ~/.claude/WORKING-CONTEXT.md | head -10
+aws s3 ls s3://mikefinneran-personal/claude-backups/ --recursive | tail -1
 
 # Check all automations
-launchctl list | grep -E "claude|user"
+launchctl list | grep -E "claude|lifehub|airtable"
 ```
 
 **Troubleshooting:**
@@ -620,18 +574,21 @@ launchctl list | grep -E "claude|user"
 - ❌ Client confidential data
 - ❌ Personal sensitive information
 - ❌ Production credentials
+- ❌ Private business strategies
 
 **Safe to include:**
 - ✅ Project names and descriptions
 - ✅ File paths and locations
 - ✅ Workflow preferences
 - ✅ Tool usage patterns
+- ✅ Public Airtable base IDs
 
 **Credential Management:**
-- Use password manager for all secrets
-- Reference with environment variables
+- Use 1Password for all secrets
+- Reference with: `op item get "credential-name"`
 - Never hardcode in memory files
 - Rotate credentials quarterly
+- Use environment variables for scripts
 
 ---
 
@@ -653,29 +610,126 @@ launchctl list | grep -E "claude|user"
 - Full context load: < 3 seconds
 - Project switch: < 2 seconds
 
+**Monitor with:**
+```bash
+# File sizes
+du -h ~/.claude/CLAUDE.md
+wc -l ~/.claude/*.md
+
+# S3 usage
+aws s3 ls s3://mikefinneran-personal/claude-backups/ --summarize --human-readable
+```
+
+---
+
+## Content Lifecycle
+
+**Archive when:**
+- Project completed > 30 days ago
+- Information unchanged > 90 days
+- File size exceeds limits
+- Content better suited for external docs
+
+**Archive location:** `~/Documents/ObsidianVault/Archive/YYYY-MM/`
+
+**Retention Policy:**
+- Active projects: Indefinitely
+- Completed projects: 90 days, then archive
+- Session archives: 30 days, then S3 only
+- S3 backups: 30 days (configure lifecycle policy)
+
+---
+
+## External Integrations
+
+**Airtable Sync:**
+- Backlog items auto-sync from CLAUDE.md
+- Projects tracked in: app6g0t0wtruwLA5I (WalterFetch Intelligence)
+- Sync frequency: Manual via "add to backlog" command
+- Tables: Tasks, Projects, Sprints, Milestones, Clients
+
+**Git Integration:**
+- Auto-commit on project milestones
+- Tag releases with version from CLAUDE.md
+- Push to backup repo daily (via S3)
+
+**Calendar Integration:**
+- Weekly review: Monday 9 AM
+- Monthly archival: First Monday of month
+- Backup verification: Daily 2:15 AM (15min after backup)
+- S3 backup: Daily 2:00 AM
+
+**Apple Notes:**
+- Primary knowledge base
+- Quick capture for ideas
+- Meeting notes
+- Research summaries
+
 ---
 
 ## Document Metadata
 
 **Tags:** #memory-system #persistent-context #automation #best-practices
 **Category:** Configuration
-**Version:** 1.0.0
-**Last Updated:** [YYYY-MM-DD]
+**Version:** 2.5
+**Last Updated:** 2025-11-12
 **Review Cycle:** Weekly (Mondays)
-**Owner:** [YOUR_NAME]
+**Owner:** Mike Finneran
+**Dependencies:** S3, Airtable, Apple Notes, iTerm2
+**Related Docs:**
+- ~/.claude/S3-INTEGRATION-SYSTEM.md
+- ~/.claude/AUTOMATION_LOCATIONS.md
+- ~/.claude/guides/PROMPT-ENGINEERING-v1.1.md
+- ~/Documents/ObsidianVault/Projects/persistent-memory/
 
 ---
 
 ## CLAUDE.md Changelog
 
-**v1.0.0** ([YYYY-MM-DD])
-- Initial setup from template
-- Configured user profile
-- Set up project locations
-- Enabled core automations
+**2025-11-12 v2.5** (Major cleanup - Performance optimization):
+- ✅ Reduced from 1273 lines to ~650 lines (49% reduction)
+- ✅ Extracted Prompt Engineering Standards to `~/.claude/guides/PROMPT-ENGINEERING-v1.1.md`
+- ✅ Trimmed iTerm2 section to reference-only (kept knowledge base links)
+- ✅ Removed all Warp terminal references (no longer used)
+- ✅ Updated Current Week Focus to Week 46 (Nov 12, 2025)
+- ✅ Removed duplicate/redundant content across sections
+- ✅ Consolidated Custom Scripts Library (removed verbose examples)
+- ✅ Optimized token usage: ~53K → ~4-5K tokens (90% reduction)
+- ✅ File size: ~60KB → ~32KB (47% reduction)
+- ✅ Now meets all performance targets
 
-**Next review**: [YYYY-MM-DD] (weekly)
+**2025-11-12 v2.4** (Hybrid LLM Router Integration):
+- ✅ Added Hybrid LLM Router section to Phase 0 (Delegation Check)
+- ✅ Integrated 25-model fleet (20 local + 5 commercial) for intelligent routing
+- ✅ Claude is now the router - Removed GPT-4o-mini classification
+- ✅ Automatic routing logic - Claude decides when to route vs answer directly
+- ✅ Production-ready router at `~/crewai-specialists/llm-router/`
+
+**2025-11-03 v2.2** (Prompt Engineering Standards):
+- ✅ Added Prompt Engineering Standards section
+- ✅ Integrated WalterSignal Ivy League Education Protocol
+- ✅ Standard prompt template with 9 components
+
+**2025-11-03 v2.1** (Tools Inventory Update):
+- ✅ Added Shell Aliases Quick Reference (25+ aliases documented)
+- ✅ Added Slash Commands section (7 commands)
+- ✅ Added Alfred Snippets section (12 keyboard shortcuts)
+- ✅ Added Custom Scripts Library (30+ scripts)
+
+**2025-11-02 v2.0**:
+- ✅ Added S3 backup automation (daily 2 AM)
+- ✅ Added current week focus section
+- ✅ Added industry best practices
+
+**2025-10-27 v1.0**:
+- Initial persistent memory structure
+- Added automation checks
+- Added iTerm2 integration
+- Added tool usage guidelines
+
+**Next review**: 2025-11-19 (weekly)
 **Update frequency**: Weekly (Mondays)
+**Last verified working**: 2025-11-12
 
 ---
 
